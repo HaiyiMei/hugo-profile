@@ -92,3 +92,7 @@
 {{ if (.Site.Params.customScripts | default false) }}
 {{ .Site.Params.customScripts | safeHTML }}
 {{ end }}
+
+{{ if (.Site.Params.theme.enableAllTargetBlank | default true) }}
+    <script src="{{ .Site.Params.staticPath }}/js/targetBlank.js"></script>
+{{ end }}
