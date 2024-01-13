@@ -23,13 +23,15 @@
 {{ $showNavBarOnScrollUp := .Site.Params.navbar.stickyNavBar.showOnScrollUp | default false }}
 <script>
     var prevScrollPos = window.pageYOffset;
+    var hideOnClick = false;
+
     window.addEventListener("scroll", function showHeaderOnScroll() {
         let profileHeaderElem = document.getElementById("profileHeader");
         let currentScrollPos = window.pageYOffset;
         let resetHeaderStyle = false;
         let showNavBarOnScrollUp = {{ $showNavBarOnScrollUp }};
         let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
-        if (showNavBar) {
+        if (showNavBar && !hideOnClick) {
             profileHeaderElem.classList.add("showHeaderOnTop");
         } else {
             resetHeaderStyle = true;
@@ -40,8 +42,22 @@
         if(resetHeaderStyle) {
             profileHeaderElem.classList.remove("showHeaderOnTop");
         }
-        prevScrollPos = currentScrollPos;        
+        prevScrollPos = currentScrollPos;
     });
+
+    window.addEventListener("click", function hideHeaderOnClick() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let clickedElem = document.elementFromPoint(event.clientX, event.clientY);
+        if (clickedElem.classList.contains("nav-link") || clickedElem.parentNode.id.toLowerCase().includes("topscroll")) {
+            hideOnClick = true;
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+    });
+
+    window.addEventListener("scrollend", function resetVar() {
+        hideOnClick = false;
+    });
+
 </script>
 {{ end }}
 
@@ -103,20 +119,20 @@
                     </li>
                     {{ end }}
 
-                    {{ if and (.Site.Params.education.enable | default false) (not (.Site.Params.navbar.menus.disableEducation | default false)) }}
-                    <li class="nav-item navbar-text">
-                        <a class="nav-link" href="{{ .Site.BaseURL | relURL }}#education"
-                            aria-label="education">
-                            {{ .Site.Params.education.title | default "Education" }}
-                        </a>
-                    </li>
-                    {{ end }}
-
                     {{ if and (.Site.Params.projects.enable | default false) (not (.Site.Params.navbar.menus.disableProjects | default false)) }}
                     <li class="nav-item navbar-text">
                         <a class="nav-link" href="{{ .Site.BaseURL | relURL }}#projects"
                             aria-label="projects">
                             {{ .Site.Params.projects.title | default "Projects" }}
+                        </a>
+                    </li>
+                    {{ end }}
+
+                    {{ if and (.Site.Params.education.enable | default false) (not (.Site.Params.navbar.menus.disableEducation | default false)) }}
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="{{ .Site.BaseURL | relURL }}#education"
+                            aria-label="education">
+                            {{ .Site.Params.education.title | default "Education" }}
                         </a>
                     </li>
                     {{ end }}
@@ -198,3 +214,27 @@
         </div>
     </nav>
 </header>
+
+<div id="topScrollButton", class="floating-sidebar">
+    <button class="p-2 px-3" onclick="topFunction()" id="topScroll">
+        <i class="fas fa-angle-up"></i>
+    </button>
+</div>
+
+<script>
+    var topScroll = document.getElementById("topScroll");
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            topScroll.style.display = "block";
+        } else {
+            topScroll.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
