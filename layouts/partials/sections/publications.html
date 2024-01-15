@@ -1,0 +1,104 @@
+{{ if .Site.Params.publications.enable | default false }}
+<section id="publications" class="py-5">
+    <div class="container">
+        <h3 class="text-center">{{ .Site.Params.publications.title | default "Publications" }}</h3>
+        <div class="row justify-content-center py-5">
+            {{ $indexMenu := .Site.Params.publications.index }}
+            {{ range $index, $element := .Site.Params.publications.items }}
+            <div class="col-12 p-0">
+                <div class="row row align-items-center justify-content-center m-1 mb-4">
+                    {{ if $indexMenu }}
+                    <div class="col-md-1 text-center me-2 p-0 d-none d-md-block">
+                        <div class="py-2">
+                            <span class="index shadow-lg">
+                                {{ add $index 1 }}
+                            </span>
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="row justify-content-center">
+                                    <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                                        <div style="height: 10px;"></div> 
+                                        {{ if .image }}
+                                        <img src="{{ .image }}" class="img-fluid rounded" alt="{{ .title }}">
+                                        {{ else }}
+                                        {{ $defaultImage := .Site.Params.publications.defaultImage | default "https://via.placeholder.com/150" }}
+                                        <img src="{{ $defaultImage }}" class="img-fluid rounded" alt="{{ .title }}">
+                                        {{ end }}
+
+                                        <div class="py-1 text-center">
+                                            {{ if .github }}
+                                            <!-- Get the github repo name and user name -->
+                                            {{ $github_repo := split .github "/" }}
+                                            {{ $github_repo_length := $github_repo | len }}
+                                            {{ $github_repo_name := index $github_repo (sub $github_repo_length 1) }}
+                                            {{ $github_user_name := index $github_repo (sub $github_repo_length 2) }}
+                                            <span class="m-1 mx-1">
+                                            <a href="{{ .github }}" target="_blank"> <img src="https://img.shields.io/github/stars/{{ $github_user_name }}/{{ $github_repo_name }}" alt="{{ $github_repo_name }}"></a>
+                                            </span>
+                                            {{ end }}
+
+                                            {{ if .arxiv }}
+                                            {{ $arxiv_parts := split .arxiv "/" }}
+                                            {{ $arxiv_length := $arxiv_parts | len }}
+                                            {{ $arxiv_id := index $arxiv_parts (sub $arxiv_length 1) }}
+                                            <span class="m-1 mx-1">
+                                            <a href="{{ .arxiv }}" target="_blank"> <img src="https://img.shields.io/badge/arXiv-{{ $arxiv_id }}-b31b1b.svg?style=flat" alt="arXiv"></a>
+                                            </span>
+                                            {{ end }}
+                                        </div>
+
+                                        <div class="text-center">
+                                            <strong>{{ .date }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ .title | markdownify }}</h5>
+                                            
+                                            {{ $author_length := .author | len }}
+                                            {{ $comma := "," }}
+                                            {{ range $index_author, $element_author := .author }}
+                                                {{ if eq $index_author (sub $author_length 1) }}
+                                                {{ $comma = "" }}
+                                                {{ end }}
+
+                                                {{ if .url }}
+                                                <a href="{{ .url }}" target="_blank"><h6>{{ .name }}</h6></a>{{ $comma }}
+
+                                                {{ else }}
+                                                {{ .name | markdownify }}{{ $comma }}
+                                                {{ end }}
+
+                                            {{ end }}
+
+                                            <div class="py-1 publications-content">
+                                                {{ .content | markdownify}}
+                                            </div>
+
+                                            <div class="py-1">
+                                                {{ if .featuredLink.enable }}
+                                                <a href="{{ .featuredLink.url }}" class="btn">
+                                                    {{ .featuredLink.name | default "Featured" }}
+                                                </a>
+                                                {{ end }}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}
