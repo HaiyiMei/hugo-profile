@@ -1,12 +1,19 @@
 {{ if .Site.Params.publications.enable | default false }}
 <section id="publications" class="py-5">
     <div class="container">
-        <h3 class="text-center">{{ .Site.Params.publications.title | default "Publications" }}</h3>
+        <h3 class="text-center">
+            {{ .Site.Params.publications.title | default "Publications" }}
+            {{ if .Site.Params.publications.url }}
+                <a href="{{ .Site.Params.publications.url }}" target="_blank" class="btn social-icon">
+                    <i class="fa-brands fa-google-scholar"></i>
+                </a>
+            {{ end }}
+        </h3>
         <div class="row justify-content-center py-5">
             {{ $indexMenu := .Site.Params.publications.index }}
             {{ range $index, $element := .Site.Params.publications.items }}
             <div class="col-12 p-0">
-                <div class="row row align-items-center justify-content-center m-1 mb-4">
+                <div class="row align-items-center justify-content-center m-1 mb-4">
                     {{ if $indexMenu }}
                     <div class="col-md-1 text-center me-2 p-0 d-none d-md-block">
                         <div class="py-2">
@@ -20,7 +27,6 @@
                     <div class="col-md-9">
                         <div class="card">
                             <div class="card-body">
-
                                 <div class="row justify-content-center">
                                     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
                                         <div style="height: 10px;"></div> 
@@ -54,7 +60,7 @@
                                         </div>
 
                                         <div class="text-center">
-                                            <strong>{{ .date }}</strong>
+                                            <strong>{{ .date | markdownify }}</strong>
                                         </div>
                                     </div>
 
@@ -89,7 +95,6 @@
                                                 </a>
                                                 {{ end }}
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -98,6 +103,7 @@
                     </div>
                 </div>
             {{ end }}
+            </div>
         </div>
     </div>
 </section>

@@ -2,95 +2,75 @@
 <section id="projects" class="py-5">
     <div class="container">
         <h3 class="text-center">{{ .Site.Params.projects.title | default "Projects" }}</h3>
-        <div class="row justify-content-center px-3 px-md-5">
+        
+        <div class="row justify-content-center py-5">
             {{ range .Site.Params.projects.items }}
-            <div class="col-lg-4 col-md-6 my-3">
-                <div class="card my-3 h-100" title="{{ .title }}">
-                    {{ if .url }}
-                    <a class="card-body bg-transparent p-3" href="{{ .url }}" title="{{ .title }}" target="_blank">
-                    {{ end }}
+            <div class="col-12 p-0">
+                <div class="row align-items-center justify-content-center m-1 mb-4">
+                    <div class="col-md-9">
+                        <div class="card card-body">
+                            <div class="row justify-content-center">
+                                <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                                    <div style="height: 10px;"></div> 
+                                    {{ if .image }}
+                                    <img src="{{ .image }}" class="img-fluid rounded" alt="{{ .title }}">
+                                    {{ else }}
+                                    {{ $defaultImage := .Site.Params.publications.defaultImage | default "https://via.placeholder.com/150" }}
+                                    <img src="{{ $defaultImage }}" class="img-fluid rounded" alt="{{ .title }}">
+                                    {{ end }}
 
-                        <div class="card-head">
-                            <img class="card-img-top" src="{{ .image }}" alt="{{ .title }}">
-                        </div>
-                        <div class="card-body bg-transparent">
-                            <div class="pb-2 bg-transparent">
-                                {{ range .badges }}
-                                <span class="badge badge-secondary">{{ . }}</span>
-                                {{ end }}
+                                    {{ if .badges }}
+                                    <div class="py-3 pb-2 bg-transparent d-flex justify-content-center">
+                                        {{ range .badges }}
+                                        <span class="badge badge-secondary">{{ . }}</span>
+                                        {{ end }}
+                                    </div>
+                                    {{ end }}
+
+                                    {{ if .url }}
+                                    <div class="py-1 text-center">
+                                        <!-- Get the github repo name and user name -->
+                                        {{ $github_repo := split .url "/" }}
+                                        {{ $github_repo_length := $github_repo | len }}
+                                        {{ $github_repo_name := index $github_repo (sub $github_repo_length 1) }}
+                                        {{ $github_user_name := index $github_repo (sub $github_repo_length 2) }}
+                                        <span class="m-1 mx-1">
+                                        <a href="{{ .url }}" target="_blank"> <img src="https://img.shields.io/github/stars/{{ $github_user_name }}/{{ $github_repo_name }}" alt="{{ $github_repo_name }}"></a>
+                                        </span>
+                                    </div>
+                                    {{ end }}
+
+                                    <!-- {{ if .links }}
+                                    <div class="py-1">
+                                        {{ range .links }}
+                                        <span class="m-1 mx-2">
+                                            <a href="{{ .url }}" target="_blank" title="{{ .title }}">
+                                                <i class="{{ .icon }}"></i>
+                                            </a>
+                                        </span>
+                                        {{ end }}
+                                    </div>
+                                    {{ end }} -->
+                                </div>
+
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ .title | markdownify }}</h6>
+                                        <div class="py-1 publications-content">
+                                            {{ .content | markdownify}}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <h5 class="card-title bg-transparent mt-1">{{ .title }}</h5>
-                            <div class="card-text bg-transparent secondary-font">
-
-                                {{ .content | markdownify }}
-
-                            </div>
                         </div>
-
-
-                    {{ if .url }}
-                    </a>
-                    {{ end }}
-
-                    {{ if or (.links) (.featured) }}
-                    <div class="card-footer py-3">
-                        {{ range .links }}
-                        <span class="m-1 mx-2">
-                            <a href="{{ .url }}" target="_blank" title="{{ .title }}">
-                                <i class="{{ .icon }}"></i>
-                            </a>
-                        </span>
-                        {{ end }}
-                        {{ if .featured }}
-                        <span class="float-end">
-                            <a class="btn btn-sm" href="{{ .featured.link }}" target="_blank">
-                                {{ .featured.name }}
-                            </a>
-                        </span>
-                        {{ end }}
-                    </div>
-                    {{ end }}
-
-                </div>
-            </div>
-            {{ end }}
-            {{ range ( where .Site.RegularPages "Type" "projects" ) }}
-            {{ if .Params.showInHome | default true }}
-            <div class="col-lg-4 col-md-6 my-3">
-                <div class="card my-3 h-100" title="{{ .Title }}">
-                    <div class="card-head">
-                        <img class="card-img-top" src="{{ .Params.image }}" alt="{{ .Title }}">
-                    </div>
-                    <div class="card-body bg-transparent p-3">
-                        <div class="pb-2 bg-transparent">
-                            {{ range .Params.badges }}
-                            <span class="badge badge-secondary">{{ . }}</span>
-                            {{ end }}
-                        </div>
-                        <h5 class="card-title bg-transparent">{{ .Title | truncate 50 }}</h5>
-                        <div class="card-text bg-transparent secondary-font">
-                            {{ .Summary | truncate 100 | safeHTML }}
-                        </div>
-                    </div>
-                    <div class="card-footer py-3">
-                        {{ range .Params.links }}
-                        <span class="m-1 mx-2">
-                            <a href="{{ .url }}">
-                                <i class="{{ .icon }}"></i>
-                            </a>
-                        </span>
-                        {{ end }}
-                        <span class="float-end">
-                            <a class="btn btn-sm" href="{{ .RelPermalink }}">
-                                Know more
-                            </a>
-                        </span>
                     </div>
                 </div>
+
+
             </div>
-            {{ end }}
             {{ end }}
         </div>
+
     </div>
 </section>
 {{ end }}

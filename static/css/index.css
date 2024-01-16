@@ -519,6 +519,20 @@ header .navbar.animate {
     }
 }
 
+#publications a.btn.social-icon {
+    color: var(--primary-color) !important;
+    font-size: x-large;
+    line-height: 0%;
+    border: 0px;
+    transition: none;
+    vertical-align: bottom;
+}
+
+#publications a.btn.social-icon:hover {
+    background-color: var(--background-color) !important;
+    opacity: 0.7;
+}
+
 #publications .card:hover {
     transition: 0.3s;
     box-shadow: 0 4px 11px rgb(15 80 100 / 16%);
