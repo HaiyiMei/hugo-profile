@@ -303,6 +303,7 @@ header .navbar.animate {
 }
 
 #experience .nav-item .nav-link {
+    font-size: 1.2rem;
     color: var(--text-color) !important;
     border-bottom: 2px solid transparent; 
     border-radius: 0%;
@@ -364,6 +365,10 @@ header .navbar.animate {
     color: var(--primary-color);
     position: absolute;
     left: 0px;
+}
+
+#experience .experience-container .tab-content .tab-pane {
+    padding: 1rem;
 }
 
 #experience .experience-container .tab-content .tab-pane .featuredLink a::after {

@@ -16,21 +16,18 @@
                     {{ .Site.Params.hero.content | markdownify }}
                 </p>
                 <div class="row">
-                    <div class="col-auto h-100">
-                        {{ if .Site.Params.hero.button.enable }}
-                        <a href="{{ .Site.Params.hero.button.url }}" class="btn" target="_blank">
-                            {{ .Site.Params.hero.button.name | markdownify }}
-                        </a>
-                        {{ end }}
-                    </div>
                     <div class="col-auto px-0 h-100">
+                        {{ if .Site.Params.hero.button.enable }}
+                        <span class="px-1"><a href="{{ .Site.Params.hero.button.url }}" class="btn" target="_blank">
+                            {{ .Site.Params.hero.button.name | markdownify }}
+                        </a></span>
+                        {{ end }}
                         {{- partial "sections/hero/social.html" . -}}
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-12 col-lg-4">
-                <div class="row justify-content-center">
-                    <div class="col-sm-12 col-md-9 pt-5 image {{ if .Site.Params.animate }}animate{{ end }} px-5 px-md-5 px-lg-0 text-center">
+            <div class="col-sm-12 col-md-12 col-lg-4 justify-content-center d-flex">
+                    <div class="d-flex col-sm-12 col-md-9 pt-5 image {{ if .Site.Params.animate }}animate{{ end }} px-5 px-md-5 px-lg-0 text-center">
                         {{ if .Site.Params.hero.url }}
                         <a href="{{ .Site.Params.hero.url }}" target="_blank">
                         <img src="{{ .Site.Params.hero.image }}"
@@ -43,7 +40,7 @@
                             alt="">
                         {{ end }}
                     </div>
-                </div>
+                <!-- </div> -->
             </div>
         </div>
     </div>
