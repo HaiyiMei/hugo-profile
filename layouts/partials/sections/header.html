@@ -24,6 +24,23 @@
 <script>
     var prevScrollPos = window.pageYOffset;
     var hideOnClick = false;
+    var mobileView = window.matchMedia("(max-width: 992px)").matches;
+
+    if (mobileView) {
+        window.addEventListener("scroll", function showHeaderOnScroll() {
+            let profileHeaderElem = document.getElementById("profileHeader");
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        });
+        window.addEventListener("click", function hideHeaderOnClick() {
+            let profileHeaderElem = document.getElementById("profileHeader");
+            let clickedElem = document.elementFromPoint(event.clientX, event.clientY);
+            if (clickedElem.classList.contains("nav-link") || clickedElem.parentNode.id.toLowerCase().includes("topscroll")) {
+                profileHeaderElem.getElementsByClassName("navbar-collapse")[0].classList.remove("show");
+                document.styleSheets[0].addRule(".container", "padding-top: 15px !important;")
+            }
+        });
+    }
+    else {
 
     window.addEventListener("scroll", function showHeaderOnScroll() {
         let profileHeaderElem = document.getElementById("profileHeader");
@@ -41,6 +58,7 @@
         }
         if(resetHeaderStyle) {
             profileHeaderElem.classList.remove("showHeaderOnTop");
+            profileHeaderElem.getElementsByClassName("navbar-collapse")[0].classList.remove("show");
         }
         prevScrollPos = currentScrollPos;
     });
@@ -57,6 +75,8 @@
     window.addEventListener("scrollend", function resetVar() {
         hideOnClick = false;
     });
+    }
+
 
 </script>
 {{ end }}
@@ -66,15 +86,13 @@
     <nav class="pt-3 navbar navbar-expand-lg {{ if .Site.Params.animate }}animate{{ end }}">
         <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5" style="flex-direction: column;">
             <!-- navbar brand -->
+            {{ if and (or (.Site.Params.favicon) (.Site.Params.navbar.brandLogo)) .Site.Params.navbar.showBrandLogo | default true }}
             <a class="navbar-brand primary-font text-wrap" href="{{ .Site.BaseURL | relURL }}">
-                {{ if and (or (.Site.Params.favicon) (.Site.Params.navbar.brandLogo)) .Site.Params.navbar.showBrandLogo | default true }}
                 <img src="{{ .Site.Params.navbar.brandLogo | default .Site.Params.favicon }}" width="30" height="30"
                     class="d-inline-block align-top">
                 {{ .Site.Params.navbar.brandName | default .Site.Params.title }}
-                {{ else }}
-                {{ .Site.Params.navbar.brandName | default .Site.Params.title }}
-                {{ end }}
             </a>
+            {{ end }}
 
             {{ if not (.Site.Params.navbar.disableSearch | default false) }}
                 <div>

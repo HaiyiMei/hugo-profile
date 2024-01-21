@@ -82,7 +82,6 @@
     var cl = cloudinary.Cloudinary.new({cloud_name: "{{- .Site.Params.cloudinary_cloud_name }}"}); 
     cl.responsive();
 </script>
-
 {{ end }}
 
 {{ if (.Site.Params.contact.formspree.enable | default false) }}
