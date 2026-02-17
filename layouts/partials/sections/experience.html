@@ -11,10 +11,11 @@
                         {{ $date_id := replace .date " " "-" }}
                         {{ $tab_id := print $company_id "-" $date_id }}
                         <li class="nav-item px-1 bg-transparent" role="presentation">
-                            <div 
+                            <div
                                 class="nav-link bg-transparent {{ if (eq $index 0) }} active {{ end }}"
-                                aria-selected="true"
+                                aria-selected="{{ if (eq $index 0) }}true{{ else }}false{{ end }}"
                                 role="tab"
+                                tabindex="{{ if (eq $index 0) }}0{{ else }}-1{{ end }}"
                                 data-bs-toggle="pill"
                                 id='{{ $tab_id }}-tab'
                                 data-bs-target='#pills-{{ $tab_id }}'
