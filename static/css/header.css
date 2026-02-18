@@ -51,9 +51,11 @@ header .nav-link{
     color: var(--primary-color) !important;
 }
 
-header .nav-link.section-active {
+header .navbar .navbar-nav .nav-link.section-active,
+header .navbar .navbar-nav .nav-link[aria-current="location"] {
     color: var(--primary-color) !important;
-    font-weight: 600;
+    font-weight: 700;
+    box-shadow: inset 0 -2px 0 var(--primary-color);
 }
 
 section[id] {

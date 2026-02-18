@@ -316,15 +316,33 @@
             }
 
             function getActiveHash() {
-                const threshold = window.scrollY + header.offsetHeight + 16;
+                const headerLine = header.offsetHeight + 16;
+                const firstSectionRect = sectionLinks[0].section.getBoundingClientRect();
+                if (firstSectionRect.top > headerLine + 120) {
+                    return "";
+                }
+
                 let activeHash = "";
+                let closestVisible = null;
 
                 for (const item of sectionLinks) {
-                    if (item.section.offsetTop <= threshold) {
-                        activeHash = item.hash;
-                    } else {
-                        break;
+                    const rect = item.section.getBoundingClientRect();
+                    const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+
+                    if (isVisible) {
+                        const distance = Math.abs(rect.top - headerLine);
+                        if (!closestVisible || distance < closestVisible.distance) {
+                            closestVisible = { hash: item.hash, distance: distance };
+                        }
                     }
+
+                    if (rect.top <= headerLine) {
+                        activeHash = item.hash;
+                    }
+                }
+
+                if (closestVisible) {
+                    return closestVisible.hash;
                 }
 
                 const isAtBottom =
@@ -332,7 +350,7 @@
                     document.documentElement.scrollHeight;
 
                 if (isAtBottom) {
-                    activeHash = sectionLinks[sectionLinks.length - 1].hash;
+                    return sectionLinks[sectionLinks.length - 1].hash;
                 }
 
                 return activeHash;
@@ -340,6 +358,14 @@
 
             function updateActiveLink() {
                 setActiveLink(getActiveHash());
+            }
+
+            function scheduleUpdate() {
+                window.requestAnimationFrame(function () {
+                    syncHeaderHeight();
+                    updateActiveLink();
+                    window.requestAnimationFrame(updateActiveLink);
+                });
             }
 
             let ticking = false;
@@ -357,6 +383,7 @@
 
             syncHeaderHeight();
             updateActiveLink();
+            scheduleUpdate();
 
             window.addEventListener("scroll", onScroll, { passive: true });
             window.addEventListener("resize", function () {
@@ -364,10 +391,9 @@
                 updateActiveLink();
             });
             window.addEventListener("load", function () {
-                syncHeaderHeight();
-                updateActiveLink();
+                scheduleUpdate();
             });
-            window.addEventListener("hashchange", updateActiveLink);
+            window.addEventListener("hashchange", scheduleUpdate);
         }
 
         if (document.readyState === "loading") {
